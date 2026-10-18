@@ -1,0 +1,338 @@
+@import 'tailwindcss';
+
+/* Concurrency, from first principles: a technical manual. Cool paper, graphite ink, hairline
+   rules, and two signal colours that always mean the same thing: blue is cook A, amber is
+   cook B. Red is a bug, green is a pass. Every text pair is checked in tests/unit/tokens.test.ts. */
+:root {
+  --canvas: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --ink: #0f1720;
+  --ink-2: #3b4452;
+  --muted: #5b6473;
+  --rule: #e2e5eb;
+  --rule-strong: #c9ced8;
+  --blue: #1f4fd1;
+  --blue-wash: #e9effd;
+  --amber: #94540a;
+  --amber-fill: #f0a520;
+  --amber-wash: #fdf3de;
+  --red: #b42318;
+  --red-wash: #fdecea;
+  --green: #146c34;
+  --green-wash: #e7f4ec;
+  --code-bg: #0f1720;
+  --code-ink: #e5e9f0;
+  --code-muted: #97a3b6;
+  --code-rule: #232c39;
+  --shadow-panel: 0 1px 2px rgb(15 23 32 / 0.04), 0 8px 24px rgb(15 23 32 / 0.06);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-blue: var(--blue);
+  --color-blue-wash: var(--blue-wash);
+  --color-amber: var(--amber);
+  --color-amber-fill: var(--amber-fill);
+  --color-amber-wash: var(--amber-wash);
+  --color-red: var(--red);
+  --color-red-wash: var(--red-wash);
+  --color-green: var(--green);
+  --color-green-wash: var(--green-wash);
+  --color-code-bg: var(--code-bg);
+  --color-code-ink: var(--code-ink);
+  --color-code-muted: var(--code-muted);
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--blue-wash);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* A section label: a number and a name, set in mono like a manual. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+.code {
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+}
+
+code,
+pre,
+.code {
+  font-variant-ligatures: none;
+}
+
+/* Fig. 1: the blocks fade in one after another, in the order they happen. */
+.lane-block {
+  animation: lane-in 400ms var(--ease) both;
+  animation-delay: var(--at, 0ms);
+}
+
+@keyframes lane-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.otto-blink {
+  animation: otto-blink 6s infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes otto-blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}
+
+.otto-wave {
+  animation: otto-wave 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+}
+
+@keyframes otto-wave {
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lane-block,
+  .otto-blink,
+  .otto-wave {
+    animation: none;
+  }
+}
+
+/* Chapter prose. */
+.prose-manual {
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: var(--ink-2);
+}
+
+.prose-manual h2 {
+  scroll-margin-top: 5rem;
+  margin: 3rem 0 0.9rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.prose-manual h2 .anchor {
+  margin-left: 0.5rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0;
+  text-decoration: none;
+}
+
+.prose-manual h2:hover .anchor,
+.prose-manual h2 .anchor:focus-visible {
+  opacity: 1;
+}
+
+.prose-manual h3 {
+  margin: 2rem 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.prose-manual p,
+.prose-manual ul,
+.prose-manual ol {
+  margin: 0.8rem 0;
+}
+
+.prose-manual ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose-manual ul > li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin: 0.4rem 0;
+}
+
+.prose-manual ul > li::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 0.72em;
+  width: 0.45rem;
+  height: 1.5px;
+  background: var(--blue);
+}
+
+.prose-manual ol {
+  list-style: decimal-leading-zero;
+  padding-left: 2rem;
+}
+
+.prose-manual ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--muted);
+}
+
+.prose-manual a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose-manual strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose-manual blockquote {
+  margin: 1.25rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--blue);
+}
+
+.prose-manual :not(pre) > code {
+  padding: 0.08rem 0.3rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--ink);
+}
+
+.prose-manual .code-block {
+  margin: 1.25rem 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--code-bg);
+}
+
+.prose-manual .code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem 0.35rem 0.9rem;
+  border-bottom: 1px solid var(--code-rule);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--code-muted);
+}
+
+.prose-manual .code-block pre {
+  margin: 0;
+  overflow-x: auto;
+  padding: 0.85rem 1rem 1rem;
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.prose-manual .code-block.is-output {
+  background: #19212d;
+}
+
+.prose-manual .code-block.is-output pre {
+  color: #cdd5e1;
+}
+
+.prose-manual .table-wrap {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.prose-manual table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.prose-manual th,
+.prose-manual td {
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose-manual th {
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.prose-manual tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .prose-manual .code-block pre {
+    font-size: 12px;
+  }
+}
